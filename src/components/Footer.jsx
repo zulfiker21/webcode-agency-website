@@ -1,6 +1,18 @@
 import React from 'react'
+import { useForm } from "react-hook-form";
 
 const Footer = () => {
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+      } = useForm()
+    
+      const onSubmit = (data) => {
+        console.log("Submitted Data:", data); // ✅ Check if data is captured correctly
+        reset(); // ✅ Clears the form after successful submission
+    };
     return (
         <footer className='bg-base-200 text-base-content'>
             <div className="footer section-container">
@@ -24,21 +36,32 @@ const Footer = () => {
                     <a className="link link-hover">Privacy policy</a>
                     <a className="link link-hover">Cookie policy</a>
                 </nav>
-                <form>
-                    <h6 className="footer-title">Newsletter</h6>
-                    <fieldset className="form-control w-80">
-                        <label className="label">
-                            <span className="label-text">Enter your email address</span>
-                        </label>
-                        <div className="join">
-                            <input
-                                type="text"
-                                placeholder="username@site.com"
-                                className="input input-bordered join-item" />
-                            <button className="btn btn-primary join-item">Subscribe</button>
-                        </div>
-                    </fieldset>
-                </form>
+                <form onSubmit={handleSubmit(onSubmit)}>
+            <h6 className="footer-title">Newsletter</h6>
+            <fieldset className="form-control w-80">
+                <label className="label">
+                    <span className="label-text">Enter your email address</span>
+                </label>
+                <div className="join">
+                    <input
+                        type="email"
+                        placeholder="username@site.com"
+                        className="input input-bordered join-item"
+                        {...register("email", {
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "Enter a valid email address",
+                            },
+                        })}
+                    />
+                    <button type="submit" className="btn btn-primary join-item">
+                        Subscribe
+                    </button>
+                </div>
+                {errors.email && <p className="text-red-500 mt-1">{errors.email.message}</p>}
+            </fieldset>
+        </form>
             </div>
 
             {/* footer bottom */}
